@@ -1,0 +1,216 @@
+[gd_scene load_steps=27 format=3 uid="uid://d1iiwuyrwg47p"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_cyctt"]
+[ext_resource type="Texture2D" uid="uid://dq0gl1el1feov" path="res://art/player/block_try.png" id="2_0wdmm"]
+[ext_resource type="Texture2D" uid="uid://b5jnp06fx36lq" path="res://art/player/idle.png" id="2_bsdy2"]
+[ext_resource type="Texture2D" uid="uid://d20vywp1k4yxw" path="res://art/player/down_3.png" id="3_03c1k"]
+[ext_resource type="Texture2D" uid="uid://c3lu3k35wvp43" path="res://art/player/jump.png" id="3_pok4t"]
+[ext_resource type="Texture2D" uid="uid://dujyowhbkoed8" path="res://art/player/kick.png" id="4_e5edk"]
+[ext_resource type="Texture2D" uid="uid://cxna81ylnnih8" path="res://art/player/run.png" id="4_oxv3w"]
+[ext_resource type="Texture2D" uid="uid://cwp3v8sbm6n4k" path="res://art/player/punch.png" id="5_dxfsl"]
+[ext_resource type="Texture2D" uid="uid://ucha5c4gu4c8" path="res://addons/kenney_particle_pack/fire_01.png" id="9_du7um"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1r8c"]
+atlas = ExtResource("2_0wdmm")
+region = Rect2(256, 255, 256, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hbur7"]
+atlas = ExtResource("2_bsdy2")
+region = Rect2(0, 0, 256, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i5hrw"]
+atlas = ExtResource("2_bsdy2")
+region = Rect2(256, 0, 256, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ererw"]
+atlas = ExtResource("3_03c1k")
+region = Rect2(258, 259, 252, 174)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3o35"]
+atlas = ExtResource("3_pok4t")
+region = Rect2(0, 60, 256, 190)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_10hyq"]
+atlas = ExtResource("4_e5edk")
+region = Rect2(0, 0, 256, 190)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ia0r2"]
+atlas = ExtResource("4_e5edk")
+region = Rect2(256, 0, 256, 190)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5nqud"]
+atlas = ExtResource("5_dxfsl")
+region = Rect2(0, 0, 256, 190)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n8ygg"]
+atlas = ExtResource("5_dxfsl")
+region = Rect2(256, 0, 256, 190)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uebya"]
+atlas = ExtResource("4_oxv3w")
+region = Rect2(0, 0, 256, 190)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oakh5"]
+atlas = ExtResource("4_oxv3w")
+region = Rect2(256, 0, 256, 190)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pi5fn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1r8c")
+}],
+"loop": false,
+"name": &"block",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hbur7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i5hrw")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ererw")
+}],
+"loop": false,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3o35")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_10hyq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ia0r2")
+}],
+"loop": true,
+"name": &"kick",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 10.0,
+"texture": SubResource("AtlasTexture_5nqud")
+}, {
+"duration": 10.0,
+"texture": SubResource("AtlasTexture_n8ygg")
+}],
+"loop": true,
+"name": &"punch",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uebya")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_oakh5")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bvehl"]
+size = Vector2(107, 271)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5m0b6"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0, 0)
+scale_min = 0.2
+scale_max = 0.2
+color = Color(0.666667, 0.258824, 0.0117647, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j33t2"]
+
+[sub_resource type="Animation" id="Animation_nl3ue"]
+resource_name = "idle"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kbffm"]
+_data = {
+"idle": SubResource("Animation_nl3ue")
+}
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_cyctt")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_pi5fn")
+animation = &"block"
+frame_progress = 1.0
+
+[node name="FullBody" type="CollisionShape2D" parent="."]
+position = Vector2(-4, 5)
+shape = SubResource("RectangleShape2D_bvehl")
+
+[node name="CrouchBody" type="CollisionShape2D" parent="."]
+position = Vector2(-4, 72)
+scale = Vector2(1, 0.5)
+shape = SubResource("RectangleShape2D_bvehl")
+
+[node name="FireParticle" type="GPUParticles2D" parent="."]
+z_index = 1
+position = Vector2(103, -37)
+scale = Vector2(20, 12)
+emitting = false
+amount = 1
+process_material = SubResource("ParticleProcessMaterial_5m0b6")
+texture = ExtResource("9_du7um")
+lifetime = 1.3
+one_shot = true
+preprocess = 1.0
+trail_lifetime = 2.54
+
+[node name="ComboTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="Colliders" type="Node2D" parent="."]
+position = Vector2(-4, 5)
+
+[node name="Punch" type="Area2D" parent="Colliders" groups=["player"]]
+position = Vector2(4, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders/Punch"]
+position = Vector2(103, -37)
+scale = Vector2(5, 3)
+shape = SubResource("RectangleShape2D_j33t2")
+
+[node name="Kick" type="Area2D" parent="Colliders" groups=["player"]]
+position = Vector2(75, 68)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Colliders/Kick"]
+position = Vector2(13, 13)
+scale = Vector2(3, 3)
+shape = SubResource("RectangleShape2D_j33t2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_kbffm")
+}
+
+[node name="Cooldown" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="ComboTimer" to="." method="_on_combo_timer_timeout"]
+[connection signal="body_entered" from="Colliders/Punch" to="." method="_on_punch_body_entered"]
+[connection signal="body_exited" from="Colliders/Punch" to="." method="_on_punch_body_exited"]
+[connection signal="body_entered" from="Colliders/Kick" to="." method="_on_kick_body_entered"]
+[connection signal="body_exited" from="Colliders/Kick" to="." method="_on_kick_body_exited"]
+[connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]

@@ -1,0 +1,134 @@
+[gd_scene load_steps=14 format=3 uid="uid://cjgutef87i7qu"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_dd1nr"]
+[ext_resource type="Texture2D" uid="uid://bd5jdvg5iccun" path="res://art/Free-Pixel-Art-Street-2D-Backgrounds5.jpg" id="2_xxxfr"]
+[ext_resource type="PackedScene" uid="uid://d1iiwuyrwg47p" path="res://player.tscn" id="3_3r5ua"]
+[ext_resource type="Script" path="res://ProgressBar.gd" id="4_4uqiy"]
+[ext_resource type="Script" path="res://Label.gd" id="4_brihm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jvogr"]
+size = Vector2(232, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1a6au"]
+size = Vector2(12.7, 74.9)
+
+[sub_resource type="MeshTexture" id="MeshTexture_ivk7q"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8sm22"]
+texture = SubResource("MeshTexture_ivk7q")
+modulate_color = Color(1, 1, 0, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_6wh0d"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f25fr"]
+texture = SubResource("MeshTexture_6wh0d")
+modulate_color = Color(0.745098, 0, 0, 1)
+
+[sub_resource type="MeshTexture" id="MeshTexture_mb6ud"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x2ecf"]
+texture = SubResource("MeshTexture_mb6ud")
+modulate_color = Color(1, 1, 0, 1)
+
+[node name="main" type="Node2D" node_paths=PackedStringArray("player")]
+script = ExtResource("1_dd1nr")
+player = NodePath("Player1")
+
+[node name="Free-pixel-art-street-2d-backgrounds5" type="Sprite2D" parent="."]
+position = Vector2(758, 647)
+scale = Vector2(1.31667, 1.35312)
+texture = ExtResource("2_xxxfr")
+
+[node name="Player1" parent="." node_paths=PackedStringArray("OPPONENT") instance=ExtResource("3_3r5ua")]
+position = Vector2(128, 495)
+NAME = "player 1"
+OPPONENT = NodePath("../Player2")
+knockback_distance = 25.0
+
+[node name="Player2" parent="." node_paths=PackedStringArray("OPPONENT") instance=ExtResource("3_3r5ua")]
+position = Vector2(1002, 494)
+NAME = "player 2"
+CONTROL_SCHEME = 1
+OPPONENT = NodePath("../Player1")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Ground" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(581, 695)
+scale = Vector2(5, 5)
+shape = SubResource("RectangleShape2D_jvogr")
+
+[node name="LeftWall" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-69, 374.5)
+scale = Vector2(10, 10)
+shape = SubResource("RectangleShape2D_1a6au")
+
+[node name="RightWall" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1225, 375)
+scale = Vector2(10, 10)
+shape = SubResource("RectangleShape2D_1a6au")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(581, 314)
+
+[node name="HealthBar2" type="ProgressBar" parent="." node_paths=PackedStringArray("player")]
+offset_left = 662.0
+offset_top = 19.0
+offset_right = 1130.0
+offset_bottom = 93.0
+theme_override_styles/background = SubResource("StyleBoxTexture_8sm22")
+theme_override_styles/fill = SubResource("StyleBoxTexture_f25fr")
+fill_mode = 1
+show_percentage = false
+script = ExtResource("4_4uqiy")
+player = NodePath("../Player2")
+
+[node name="HealthBar3" type="ProgressBar" parent="." node_paths=PackedStringArray("player")]
+offset_left = 20.0
+offset_top = 19.0
+offset_right = 488.0
+offset_bottom = 93.0
+theme_override_styles/background = SubResource("StyleBoxTexture_x2ecf")
+theme_override_styles/fill = SubResource("StyleBoxTexture_f25fr")
+show_percentage = false
+script = ExtResource("4_4uqiy")
+player = NodePath("../Player1")
+
+[node name="TimeLeftText" type="Label" parent="."]
+offset_left = 515.0
+offset_top = 19.0
+offset_right = 558.0
+offset_bottom = 43.0
+scale = Vector2(3, 3)
+text = "timer"
+script = ExtResource("4_brihm")
+
+[node name="WinnerText" type="RichTextLabel" parent="."]
+offset_left = 175.0
+offset_top = 102.0
+offset_right = 1053.0
+offset_bottom = 287.0
+theme_override_font_sizes/normal_font_size = 100
+text = "winner 1
+"
+scroll_active = false
+shortcut_keys_enabled = false
+
+[node name="RestartText" type="RichTextLabel" parent="."]
+offset_left = 377.0
+offset_top = 269.0
+offset_right = 792.0
+offset_bottom = 380.0
+theme_override_font_sizes/normal_font_size = 50
+text = "press r to restart
+"
+scroll_active = false
+shortcut_keys_enabled = false
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 60.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
