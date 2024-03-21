@@ -206,9 +206,14 @@ libraries = {
 wait_time = 0.5
 one_shot = true
 
+[node name="RecoveryTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
 [connection signal="timeout" from="ComboTimer" to="." method="_on_combo_timer_timeout"]
 [connection signal="body_entered" from="Colliders/Punch" to="." method="_on_punch_body_entered"]
 [connection signal="body_exited" from="Colliders/Punch" to="." method="_on_punch_body_exited"]
 [connection signal="body_entered" from="Colliders/Kick" to="." method="_on_kick_body_entered"]
 [connection signal="body_exited" from="Colliders/Kick" to="." method="_on_kick_body_exited"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
+[connection signal="timeout" from="RecoveryTimer" to="." method="_on_recovery_timer_timeout"]

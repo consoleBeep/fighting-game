@@ -20,11 +20,13 @@ const COMBOS = {
 	[ ActionType.KICK ]: 10,
 	[ ActionType.JUMP ]: 0,
 	[ ActionType.JUMP, ActionType.KICK]: 15,
-	[ ActionType.PUNCH, ActionType.PUNCH, ActionType.KICK ]: 50, # Aerial.
-	[ ActionType.PUNCH, ActionType.KICK, ActionType.KICK ]: 50, # Body slam.
-	[ ActionType.KICK, ActionType.KICK, ActionType.KICK ]: 25, # kick kick.
-	[ ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.KICK, ActionType.KICK ]: 100,
-	[ ActionType.JUMP, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.JUMP, ActionType.PUNCH]: 500,
+	[ ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH ]: 25,
+	[ ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.KICK ]: 25, 
+	[ ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH ]: 75,
+	[ ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.KICK, ActionType.KICK,  ActionType.KICK ]: 75,
+	[ ActionType.PUNCH, ActionType.KICK, ActionType.KICK, ActionType.PUNCH, ActionType.KICK,  ActionType.PUNCH ]: 100,
+	[ ActionType.KICK, ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH,  ActionType.KICK ]: 100,
+	[ ActionType.JUMP, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.JUMP, ActionType.PUNCH]: 175,
 }
 
 @export var NAME: String 
@@ -39,6 +41,8 @@ const COMBOS = {
 @onready var _animated_sprite = $AnimatedSprite2D
 @onready var combo_timer = $ComboTimer
 @onready var cooldown_timer = $Cooldown
+@onready var recovery_timer = $RecoveryTimer
+
 
 var kick_target = null
 var punch_target = null
@@ -46,6 +50,8 @@ var attack_sequence = []
 #
 var is_player_crouching = false
 var is_blocking = false
+var is_in_recovery = false
+
 
 
 
@@ -73,6 +79,8 @@ func _process(_delta):
 	handle_direction()
 
 func handle_combat():
+	if is_in_recovery:
+		return
 	
 	if cooldown_timer.is_stopped() == false:
 		return
@@ -185,17 +193,18 @@ func damage(target: Player, last_attack: ActionType):
 	if damage_amount == null:
 		damage_amount = last_attack_damage
 		
-	
+	target.is_in_recovery = true
+	target.recovery_timer.start()  # Assuming the recovery timer duration is set in the editor
 	OPPONENT.HEALTH -= damage_amount
 	OPPONENT.HealthChanged.emit()
-	knockback()
+	knockback(10)
 	
 	if damage_amount > 15:
+		knockback(25)
 		attack_sequence.clear()
 		cooldown_timer.start()
 		$FireParticle.restart()
 
-	
 	print(OPPONENT.HEALTH)
 	print(damage_amount)
 
@@ -259,11 +268,14 @@ func handle_direction():
 		has_flipped = true
 
 
-func knockback():
-	var direction = sign(global_position.x - OPPONENT.global_position.x)
-	
-	OPPONENT.global_position.x += direction * -knockback_distance
+func knockback(knockback_amount: int):
+	var direction = sign(global_position.x + OPPONENT.global_position.x)
+	OPPONENT.global_position.x += direction * knockback_amount
 
 
-func block_timer():
-	pass
+
+
+func _on_recovery_timer_timeout():
+	is_in_recovery = false
+
+
