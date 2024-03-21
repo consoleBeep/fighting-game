@@ -95,15 +95,17 @@ script = ExtResource("4_4uqiy")
 player = NodePath("../Player1")
 
 [node name="TimeLeftText" type="Label" parent="."]
-offset_left = 515.0
-offset_top = 19.0
-offset_right = 558.0
-offset_bottom = 43.0
+offset_left = 502.0
+offset_top = 1.0
+offset_right = 555.0
+offset_bottom = 29.0
 scale = Vector2(3, 3)
+theme_override_font_sizes/font_size = 20
 text = "timer"
 script = ExtResource("4_brihm")
 
 [node name="WinnerText" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 175.0
 offset_top = 102.0
 offset_right = 1053.0
@@ -115,6 +117,7 @@ scroll_active = false
 shortcut_keys_enabled = false
 
 [node name="RestartText" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 377.0
 offset_top = 269.0
 offset_right = 792.0

@@ -38,7 +38,6 @@ const COMBOS = {
 @onready var HEALTH:int = MAX_HEALTH 
 @onready var _animated_sprite = $AnimatedSprite2D
 @onready var combo_timer = $ComboTimer
-@onready var _partical = $Colliders/Punch/CollisionShape2D/GPUParticles2D
 @onready var cooldown_timer = $Cooldown
 
 var kick_target = null
@@ -69,7 +68,7 @@ func _ready():
 	pass
 
 
-func _process(delta):
+func _process(_delta):
 	handle_combat()
 	handle_direction()
 
@@ -158,9 +157,6 @@ func handle_gravity(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
-
-func handle_orientation():
-	var direction 
 
 
 func detect_hit(action_type: ActionType):

@@ -11,7 +11,7 @@ func _ready():
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	handle_restart_request()
 	check_win_condition()
 	timer_left.text = "%d:%02d" % [floor($Timer.time_left / 60), int($Timer.time_left) % 60]
@@ -29,9 +29,9 @@ func check_win_condition():
 	disable_players()
 	
 
-func winner_name(winner_name):
+func winner_name(winner):
 	winner_text.visible = true
-	winner_text.text = "winner:" + " "+ winner_name
+	winner_text.text = "winner:" + " "+ winner
 	
 	restart_text.visible = true
 
@@ -41,8 +41,8 @@ func handle_restart_request():
 		get_tree().reload_current_scene()
 	
 func disable_players():
-	$Player1.process_mode = 4
-	$Player2.process_mode = 4
+	$Player1.process_mode = Node.PROCESS_MODE_DISABLED
+	$Player2.process_mode = Node.PROCESS_MODE_DISABLED
 	
 func calculate_winner():
 	if player.HEALTH > player.OPPONENT.HEALTH:
