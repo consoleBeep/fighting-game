@@ -8,8 +8,8 @@ on:
 
 env:
   GODOT_VERSION: 4.2.1
-  EXPORT_NAME: fighting_game
-  PROJECT_PATH: fighting_game
+  EXPORT_NAME: fighting-game
+  PROJECT_PATH: fighting-game
 
 jobs:
   export-windows:
