@@ -27,6 +27,7 @@ func check_win_condition():
 		calculate_winner()
 	
 	disable_players()
+	$Timer.stop()
 	
 
 func winner_name(winner):
@@ -39,6 +40,8 @@ func winner_name(winner):
 func handle_restart_request():
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
+	if Input.is_action_just_pressed("Mainmenu"):
+		get_tree().change_scene_to_file("res://control.tscn")
 	
 func disable_players():
 	$Player1.process_mode = Node.PROCESS_MODE_DISABLED

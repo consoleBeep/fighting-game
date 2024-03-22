@@ -23,10 +23,11 @@ const COMBOS = {
 	[ ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH ]: 25,
 	[ ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.KICK ]: 25, 
 	[ ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH ]: 75,
+	[ ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH, ActionType.KICK ]: 75,
 	[ ActionType.PUNCH, ActionType.PUNCH, ActionType.PUNCH, ActionType.KICK, ActionType.KICK,  ActionType.KICK ]: 75,
 	[ ActionType.PUNCH, ActionType.KICK, ActionType.KICK, ActionType.PUNCH, ActionType.KICK,  ActionType.PUNCH ]: 100,
 	[ ActionType.KICK, ActionType.KICK, ActionType.PUNCH, ActionType.KICK, ActionType.PUNCH,  ActionType.KICK ]: 100,
-	[ ActionType.JUMP, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.JUMP, ActionType.PUNCH]: 175,
+	[ ActionType.JUMP, ActionType.KICK, ActionType.KICK, ActionType.KICK, ActionType.JUMP, ActionType.PUNCH]: 200,
 }
 
 @export var NAME: String 
@@ -125,8 +126,15 @@ func handle_movement():
 	$FullBody.disabled = false
 	$Colliders/Punch/CollisionShape2D.disabled = false
 	
+	
 	#_animated_sprite.play("default")
 	var animation = "default"
+	
+	if is_in_recovery:
+		return
+	
+	if cooldown_timer.is_stopped() == false:
+		return	
 	
 	
 	if Input.is_action_just_pressed(map_action(control_scheme, "jump")) and is_on_floor():
@@ -176,10 +184,8 @@ func detect_hit(action_type: ActionType):
 			target = punch_target
 			
 	if target != null:
-		print(action_type, "hit ", target.name)  
 		damage(target, action_type)
-	else:
-		print(action_type, "missed")
+
 
 
 func damage(target: Player, last_attack: ActionType):
@@ -200,13 +206,10 @@ func damage(target: Player, last_attack: ActionType):
 	knockback(10)
 	
 	if damage_amount > 15:
-		knockback(25)
+		knockback(50)
 		attack_sequence.clear()
 		cooldown_timer.start()
 		$FireParticle.restart()
-
-	print(OPPONENT.HEALTH)
-	print(damage_amount)
 
 
 func register_attack(action_type: ActionType):
@@ -216,7 +219,6 @@ func register_attack(action_type: ActionType):
 	if attack_sequence.size() > 6:
 		attack_sequence.pop_front()
 		
-	print("Current attack sequence: ", attack_sequence)
 
 
 func is_opponent_body(body) -> bool:
@@ -270,7 +272,12 @@ func handle_direction():
 
 func knockback(knockback_amount: int):
 	var direction = sign(global_position.x + OPPONENT.global_position.x)
-	OPPONENT.global_position.x += direction * knockback_amount
+	
+	if !has_flipped:
+		OPPONENT.global_position.x += direction * knockback_amount
+		
+	if has_flipped:
+		OPPONENT.global_position.x -= direction * knockback_amount
 
 
 
